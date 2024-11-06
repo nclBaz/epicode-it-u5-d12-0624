@@ -12,6 +12,7 @@ import riccardogulin.u5d12.exceptions.BadRequestException;
 import riccardogulin.u5d12.exceptions.NotFoundException;
 import riccardogulin.u5d12.payloads.NewUserDTO;
 import riccardogulin.u5d12.repositories.UsersRepository;
+import riccardogulin.u5d12.tools.MailgunSender;
 
 import java.util.UUID;
 
@@ -23,6 +24,9 @@ public class UsersService {
 
 	@Autowired
 	private PasswordEncoder bcrypt;
+
+	@Autowired
+	private MailgunSender mailgunSender;
 
 	public User save(NewUserDTO body) {
 		// 1. Verifico che l'email non sia già in uso
@@ -38,7 +42,12 @@ public class UsersService {
 				"https://ui-avatars.com/api/?name=" + body.name() + "+" + body.surname());
 
 		// 3. Salvo il nuovo utente
-		return this.usersRepository.save(newUser);
+		User savedUser = this.usersRepository.save(newUser);
+
+		// 4. Invio email di benvenuto
+		mailgunSender.sendRegistrationEmail(savedUser);
+		
+		return savedUser;
 	}
 
 	public Page<User> findAll(int page, int size, String sortBy) {

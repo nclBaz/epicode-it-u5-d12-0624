@@ -15,6 +15,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -52,8 +53,8 @@ public class SecurityConfig {
 		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://www.mywonderfulfrontend.com"));
 		// Mi creo una whitelist di uno o più indirizzi FRONTEND che voglio che possano accedere a questo backend.
 		// Volendo (anche se rischioso) potrei permettere l'accesso a tutti mettendo "*"
-		configuration.setAllowedMethods(Arrays.asList("*"));
-		configuration.setAllowedHeaders(Arrays.asList("*"));
+		configuration.setAllowedMethods(List.of("*"));
+		configuration.setAllowedHeaders(List.of("*"));
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration); // Applica ad ogni URL del mio backend la configurazione di sopra
